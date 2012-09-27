@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:py="http://genshi.edgewall.org/">
+  <xi:include href="downloads-macros.html"/>
+  <xi:include href="layout.html"/>
+  <head>
+    <title>Downloads</title>
+  </head>
+
+  <body>
+    <div id="content" class="downloads">
+      <div class="title">
+        <h1>${downloads.title}</h1>
+      </div>
+
+      ${wiki_to_html(context(parent), downloads.description)}
+
+      <form py:if="'DOWNLOADS_ADMIN' in perm" method="post" action="${href.downloads()}">
+        <fieldset>
+          <legend>
+            Edit Description:
+          </legend>
+
+          <div py:if="req.args.action == 'edit'" class="field">
+            <textarea id="description" name="description" class="wikitext" rows="10" cols="78">${downloads.description}</textarea>
+          </div>
+
+          <div class="buttons">
+            <input type="submit" name="submit" value="Edit"/>
+            <py:choose>
+              <py:when test="req.args.action == 'edit'">
+                <input type="button" name="cancel" value="Cancel" onclick="location.replace('${href.downloads()}?order=${downloads.order};desc=${downloads.desc}')"/>
+                <input type="hidden" name="action" value="post-edit"/>
+              </py:when>
+              <py:otherwise>
+                <input type="hidden" name="action" value="edit"/>
+              </py:otherwise>
+            </py:choose>
+            <input type="hidden" name="order" value="${downloads.order}"/>
+            <input type="hidden" name="desc" value="${downloads.desc}"/>
+          </div>
+        </fieldset>
+      </form>
+
+      ${display_downloads(downloads, href.downloads())}
+
+      <form py:if="'DOWNLOADS_ADD' in perm" class="addnew" enctype="multipart/form-data" method="post" action="${href.downloads()}">
+        <fieldset>
+          <legend>
+            Add Download:
+          </legend>
+
+          <div class="field">
+            <label for="file">File:</label><br/>
+            <input type="file" id="file" name="file" /><br/>
+          </div>
+
+          <div py:if="'description' in downloads.visible_fields" class="field">
+            <label for="description">Description:</label><br/>
+            <input type="text" id="description" name="description" value=""/><br/>
+          </div>
+
+          <div py:if="('tags' in downloads.visible_fields) and downloads.has_tags" class="field">
+            <label for="tags">Additional Tags:</label><br/>
+            <input type="text" id="tags" name="tags" value=""/><br/>
+          </div>
+
+          <div py:if="'component' in downloads.visible_fields" class="component">
+            <label for="component">Component:</label><br/>
+            <select id="component" name="component">
+              <py:for each="component in downloads.components">
+                <option value="${component.name}">${component.name}</option>
+              </py:for>
+            </select><br/>
+          </div>
+
+          <div py:if="'version' in downloads.visible_fields" class="version">
+            <label for="version">Version:</label><br/>
+            <select id="version" name="version">
+              <py:for each="version in downloads.versions">
+                <option value="${version.name}">${version.name}</option>
+              </py:for>
+            </select><br/>
+          </div>
+
+          <div py:if="'architecture' in downloads.visible_fields" class="architecture">
+            <label for="architecture">Architecture:</label><br/>
+            <select id="architecture" name="architecture">
+              <py:for each="architecture in downloads.architectures">
+                <option value="${architecture.id}">${architecture.name}</option>
+              </py:for>
+            </select><br/>
+          </div>
+
+          <div py:if="'platform' in downloads.visible_fields" class="platform">
+            <label for="platform">Platform:</label><br/>
+            <select id="platform" name="platform">
+              <py:for each="platform in downloads.platforms">
+                <option value="${platform.id}">${platform.name}</option>
+              </py:for>
+            </select><br/>
+          </div>
+
+          <div py:if="'type' in downloads.visible_fields" class="type">
+            <label for="type">Type:</label><br/>
+            <select id="type" name="type">
+              <py:for each="type in downloads.types">
+                <option value="${type.id}">${type.name}</option>
+              </py:for>
+            </select><br/>
+          </div>
+
+          <div class="buttons">
+            <input type="submit" name="submit" value="Add"/>
+            <input type="hidden" name="action" value="post-add"/>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+  </body>
+
+</html>
