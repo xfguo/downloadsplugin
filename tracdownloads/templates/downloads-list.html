@@ -41,8 +41,6 @@
         </fieldset>
       </form>
 
-      ${display_downloads(downloads, href.downloads())}
-
       <form py:if="'DOWNLOADS_ADD' in perm" class="addnew" enctype="multipart/form-data" method="post" action="${href.downloads()}">
         <fieldset>
           <legend>
